@@ -13,8 +13,8 @@ export default function Footer() {
             className="h-12 w-auto object-left object-contain"
           />
           <p className="text-white/60 text-sm leading-relaxed">
-            Astorga y González Limitada — más de 40 años distribuyendo
-            rodamientos, retenes y repuestos industriales y agrícolas en Chile.
+            Astorga y González Limitada - más de 40 años distribuyendo
+            rodamientos, retenes, y repuestos industriales y agrícolas en Chile.
           </p>
         </div>
 

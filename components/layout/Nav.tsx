@@ -12,7 +12,7 @@ export default function Nav() {
 
       <nav className="bg-blue px-12 flex items-center justify-between h-18 sticky top-0 z-50">
         <Link href="/" className="flex items-center">
-          <img src="/images/logo-white.png" alt="Rodamientos Aguas Negras" className="h-12 w-auto" />
+          <img src="/images/logo.png" alt="Rodamientos Aguas Negras" className="h-12 w-auto" />
         </Link>
 
         <ul className="flex gap-8 list-none">

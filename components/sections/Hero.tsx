@@ -38,8 +38,8 @@ export default function Hero() {
       </div>
 
       {/* right column — placeholder until we have real photos */}
-      <div className="relative z-10 h-[380px] bg-white/5 rounded-lg flex items-center justify-center border border-white/10">
-        <span className="text-white/30 text-sm">foto hero — maquinaria agrícola</span>
+      <div className="relative z-10 h-[380px] flex items-center justify-center">
+        <img src="/images/hero1.jpg" alt="foto — repuestos industriales y agrícolas" className="relative h-[420px] rounded-lg flex items-center justify-center w-auto object-contain" />
       </div>
 
     </section>
