@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+
+  "name": "ayg-platform",
+
+  "compatibility_date": "2026-07-25",
+
+  "assets": {
+    "directory": "./out"
+  },
+
+  "observability": {
+    "enabled": true
+  }
+}
