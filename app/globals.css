@@ -33,3 +33,28 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
+
+:where(a, button, input, textarea, select, summary):focus-visible {
+  outline: 3px solid var(--color-yellow);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px var(--color-blue);
+}
+
+:where(section[id]) {
+  scroll-margin-top: 5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

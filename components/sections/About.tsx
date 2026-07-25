@@ -1,40 +1,35 @@
-const stats = [
-  { value: '+40', label: 'Años en el mercado' },
-  { value: '1', label: 'Distribuidor oficial Koyo en Chile' },
-  { value: '100%', label: 'Importación directa Corteco' },
-]
+import { aboutStats, company } from '@/lib/site-content'
+import Image from 'next/image'
 
 export default function About() {
   return (
-    <section id="nosotros" className="bg-white px-12 py-20">
-      <div className="grid grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
-
-        {/* left column — text */}
+    <section id="nosotros" aria-labelledby="nosotros-title" className="bg-white px-5 py-14 sm:px-8 lg:px-12 lg:py-20">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <div>
-          <span className="text-blue-dark text-[11px] font-semibold tracking-widest uppercase">
+          <span className="text-[11px] font-semibold uppercase tracking-widest text-blue-dark">
             Quiénes somos
           </span>
-          <h2 className="font-display text-[clamp(28px,3.5vw,42px)] font-extrabold uppercase text-text mt-2 mb-5 leading-tight">
+          <h2 id="nosotros-title" className="mb-5 mt-2 font-display text-[clamp(28px,3.5vw,42px)] font-extrabold uppercase leading-tight text-text">
             Más de 40 años sirviendo al campo y la industria
           </h2>
-          <p className="text-text-mid text-[16px] leading-relaxed mb-4">
+          <p className="mb-4 text-[16px] leading-relaxed text-text-mid">
             Somos Astorga y González Limitada, una empresa familiar con más de
             cuatro décadas de experiencia en la distribución de rodamientos,
             retenes y repuestos industriales en Chile.
           </p>
-          <p className="text-text-mid text-[16px] leading-relaxed mb-8">
+          <p className="mb-8 text-[16px] leading-relaxed text-text-mid">
             Nuestra trayectoria nos ha convertido en el socio de confianza de
             talleres mecánicos, empresas agrícolas y distribuidores a lo largo
             de todo el país.
           </p>
 
-          <div className="grid grid-cols-3 gap-6">
-            {stats.map((stat) => (
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
+            {aboutStats.map((stat) => (
               <div key={stat.label}>
-                <span className="font-display text-3xl font-extrabold text-blue-dark block">
+                <span className="block font-display text-3xl font-extrabold text-blue-dark">
                   {stat.value}
                 </span>
-                <span className="text-text-light text-sm leading-snug">
+                <span className="text-sm leading-snug text-text-mid">
                   {stat.label}
                 </span>
               </div>
@@ -42,11 +37,21 @@ export default function About() {
           </div>
         </div>
 
-        {/* right column — image placeholder */}
-        <div className="bg-bg h-[420px] rounded-lg border border-border flex items-center justify-center">
-          <span className="text-text-light text-sm">foto — equipo o local Rodamientos Aguas Negras</span>
+        <div className="relative flex min-h-[300px] items-center justify-center overflow-hidden rounded-lg bg-blue px-8 py-14 text-white lg:min-h-[420px]">
+          <div aria-hidden="true" className="absolute -right-16 -top-20 h-72 w-72 rounded-full border-[44px] border-white/5" />
+          <div className="relative z-10 flex max-w-md flex-col items-center gap-6 text-center">
+            <Image
+              src="/images/logo_white.png"
+              alt=""
+              width={1567}
+              height={404}
+              className="h-auto w-full max-w-[360px]"
+            />
+            <p className="text-base leading-relaxed text-white/80">
+              {company.summary}
+            </p>
+          </div>
         </div>
-
       </div>
     </section>
   )

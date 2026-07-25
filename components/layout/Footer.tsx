@@ -1,74 +1,79 @@
 import Link from 'next/link'
+import Image from 'next/image'
+import {
+  company,
+  footerCompanyLinks,
+  productCategories,
+} from '@/lib/site-content'
 
 export default function Footer() {
   return (
     <footer className="bg-blue text-white">
-      <div className="max-w-7xl mx-auto px-12 py-16 grid grid-cols-3 gap-12">
-
-        {/* brand */}
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-5 py-12 sm:grid-cols-2 sm:px-8 lg:grid-cols-3 lg:gap-12 lg:px-12 lg:py-16">
         <div className="flex flex-col gap-4">
-          <img
-            src="/images/logo-white.png"
-            alt="Rodamientos Aguas Negras"
-            className="h-12 w-auto object-left object-contain"
+          <Image
+            src="/images/logo_white.png"
+            alt=""
+            width={1567}
+            height={404}
+            className="h-12 w-auto max-w-[280px] object-contain object-left"
           />
-          <p className="text-white/60 text-sm leading-relaxed">
-            Astorga y González Limitada - más de 40 años distribuyendo
-            rodamientos, retenes, y repuestos industriales y agrícolas en Chile.
+          <p className="max-w-sm text-sm leading-relaxed text-white/75">
+            {company.legalName} - {company.summary}
           </p>
         </div>
 
-        {/* products */}
         <div>
-          <h4 className="font-semibold text-sm tracking-widest uppercase text-white/40 mb-4">
+          <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-white/70">
             Productos
-          </h4>
+          </h2>
           <ul className="flex flex-col gap-2">
-            {['Rodamientos Koyo', 'Retenes Corteco', 'Repuestos Agrícolas', 'Ferretería'].map((item) => (
-              <li key={item}>
-                <Link href="/#productos" className="text-white/70 hover:text-white text-sm transition-colors">
-                  {item}
+            {productCategories.map((product) => (
+              <li key={product.name}>
+                <Link
+                  href="/#productos"
+                  className="text-sm text-white/80 transition-colors hover:text-white"
+                >
+                  {product.name}
                 </Link>
               </li>
             ))}
           </ul>
         </div>
 
-        {/* company */}
         <div>
-          <h4 className="font-semibold text-sm tracking-widest uppercase text-white/40 mb-4">
+          <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-white/70">
             Empresa
-          </h4>
+          </h2>
           <ul className="flex flex-col gap-2">
-            <li>
-              <Link href="/#nosotros" className="text-white/70 hover:text-white text-sm transition-colors">
-                Quiénes somos
-              </Link>
-            </li>
-            <li>
-              <Link href="/#contacto" className="text-white/70 hover:text-white text-sm transition-colors">
-                Contacto
-              </Link>
-            </li>
-            <li>
-              <Link href="/#contacto" className="text-white/70 hover:text-white text-sm transition-colors">
-                Venta por mayor
-              </Link>
-            </li>
-            <li>
-                 <a href="https://www.instagram.com/rodamientosaguasnegras/" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white text-sm transition-colors">
-                  Instagram
-                </a>
-            </li>
+            {footerCompanyLinks.map((link) => (
+              <li key={link.href}>
+                {link.external ? (
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-white/80 transition-colors hover:text-white"
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link
+                    href={link.href}
+                    className="text-sm text-white/80 transition-colors hover:text-white"
+                  >
+                    {link.label}
+                  </Link>
+                )}
+              </li>
+            ))}
           </ul>
         </div>
-
       </div>
 
-      {/* bottom bar */}
-      <div className="border-t border-white/10 px-12 py-5 flex items-center justify-between text-white/40 text-sm max-w-7xl mx-auto">
-        <span>© 2026 Rodamientos Aguas Negras — Astorga y González Ltda.</span>
-        <span>Curicó, Región del Maule, Chile 🇨🇱</span>
+      <div className="mx-auto flex max-w-7xl flex-col gap-2 border-t border-white/15 px-5 py-5 text-sm text-white/70 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-12">
+        <span>© 2026 {company.name} - {company.legalShortName}</span>
+        <span>{company.location}</span>
       </div>
     </footer>
   )

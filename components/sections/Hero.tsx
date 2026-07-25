@@ -1,47 +1,50 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Hero() {
   return (
-    <section className="bg-blue text-white px-12 py-20 grid grid-cols-2 gap-16 items-center min-h-[520px] relative overflow-hidden">
+    <section className="relative grid min-w-0 grid-cols-1 items-center gap-12 overflow-hidden bg-blue px-5 py-14 text-white sm:px-8 lg:min-h-[520px] lg:grid-cols-2 lg:gap-16 lg:px-12 lg:py-20">
+      <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-16 h-[500px] w-[500px] rounded-full border-[60px] border-white/4" />
+      <div aria-hidden="true" className="pointer-events-none absolute -bottom-24 right-20 h-[320px] w-[320px] rounded-full border-[40px] border-white/6" />
 
-      {/* background decorative circles */}
-      <div className="absolute -right-16 -top-16 w-[500px] h-[500px] rounded-full border-[60px] border-white/4 pointer-events-none" />
-      <div className="absolute right-20 -bottom-24 w-[320px] h-[320px] rounded-full border-[40px] border-white/6 pointer-events-none" />
-
-      {/* left column */}
       <div className="relative z-10">
-        <div className="inline-flex items-center gap-2 bg-yellow/15 border border-yellow/40 text-yellow text-[13px] font-semibold tracking-widest uppercase px-3.5 py-1.5 rounded-sm mb-6">
-          <span>★</span> +40 años en el mercado
+        <div className="mb-6 inline-flex items-center gap-2 rounded-sm border border-yellow/40 bg-yellow/15 px-3.5 py-1.5 text-[13px] font-semibold uppercase tracking-widest text-yellow">
+          <span aria-hidden="true">★</span> +40 años en el mercado
         </div>
 
-        <h1 className="font-display text-[clamp(42px,5vw,66px)] font-extrabold leading-none uppercase tracking-tight mb-5">
+        <h1 className="mb-5 font-display text-[clamp(40px,5vw,66px)] font-extrabold uppercase leading-none tracking-tight">
           Todos los <br />
           repuestos <br />
           que <em className="not-italic text-yellow">necesitas,</em> <br />
           aquí.
         </h1>
 
-        <p className="text-white/75 text-[17px] max-w-[440px] mb-9 leading-relaxed">
+        <p className="mb-9 max-w-[440px] text-[17px] leading-relaxed text-white/80">
           Distribuidores oficiales de <strong className="text-white">Koyo</strong> en Chile.
           Importadores directos de <strong className="text-white">Corteco</strong>.
           Repuestos agrícolas, ferretería industrial y mucho más.
         </p>
 
-        <div className="flex gap-3.5 flex-wrap">
-          <Link href="/#productos" className="bg-yellow text-blue-deeper font-bold text-[16px] tracking-widest uppercase px-7 py-3.5 rounded hover:bg-yellow/90 transition-all hover:-translate-y-px">
+        <div className="flex flex-wrap gap-3.5">
+          <Link href="/#productos" className="rounded bg-yellow px-6 py-3.5 text-[15px] font-bold uppercase tracking-widest text-blue-deeper transition-all hover:-translate-y-px hover:bg-yellow/90 sm:px-7 sm:text-[16px]">
             Ver catálogo
           </Link>
-          <Link href="/#contacto" className="border border-white/40 text-white font-bold text-[16px] tracking-widest uppercase px-7 py-3.5 rounded hover:border-white hover:bg-white/8 transition-all">
+          <Link href="/#contacto" className="rounded border border-white/50 px-6 py-3.5 text-[15px] font-bold uppercase tracking-widest text-white transition-all hover:border-white hover:bg-white/8 sm:px-7 sm:text-[16px]">
             Cotizar por mayor
           </Link>
         </div>
       </div>
 
-      {/* right column — placeholder until we have real photos */}
-      <div className="relative z-10 h-[380px] flex items-center justify-center">
-        <img src="/images/hero1.jpg" alt="foto — repuestos industriales y agrícolas" className="relative h-[420px] rounded-lg flex items-center justify-center w-auto object-contain" />
+      <div className="relative z-10 flex min-w-0 items-center justify-center">
+        <Image
+          src="/images/hero1.jpg"
+          alt="Tractor trabajando en un campo agrícola"
+          width={748}
+          height={510}
+          preload
+          className="h-auto max-h-[420px] w-full max-w-[616px] rounded-lg object-contain"
+        />
       </div>
-
     </section>
   )
 }
