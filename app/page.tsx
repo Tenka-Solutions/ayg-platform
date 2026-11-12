@@ -4,6 +4,8 @@ import Products from '@/components/sections/Products'
 import About from '@/components/sections/About'
 import Wholesale from '@/components/sections/Wholesale'
 import Contact from '@/components/sections/Contact'
+import { cartPreviewEnabled } from '@/lib/commerce/features'
+import CartPreview from '@/components/commerce/CartPreview'
 
 export default function Home() {
   return (
@@ -14,6 +16,7 @@ export default function Home() {
       <Wholesale />
       <About />
       <Contact />
+      {cartPreviewEnabled && <CartPreview />}
     </main>
   )
 }

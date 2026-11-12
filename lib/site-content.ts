@@ -52,97 +52,89 @@ export const socialLinks: readonly SiteLink[] = [
 
 export const productCategories: readonly ProductCategory[] = [
   {
-    tag: 'Distribuidor Oficial',
+    tag: 'Rodamientos',
     name: 'Rodamientos Koyo',
     description:
-      'La mejor calidad en rodamientos al mejor precio del mercado. Somos los únicos distribuidores oficiales de Koyo (JTEKT) en Chile. Stock permanente de todas las medidas y tipos.',
-    badge: 'Koyo JTEKT',
-    cta: 'Consultar stock',
+      'Consulta por rodamientos Koyo y referencias compatibles. Indícanos las medidas o el código que necesitas.',
+    badge: 'Koyo / JTEKT',
+    cta: 'Consultar disponibilidad',
   },
   {
-    tag: 'Importación Directa',
+    tag: 'Retenes',
     name: 'Retenes Corteco',
     description:
-      'Retenes de importación directa. Calidad alemana, medidas y tipos variados para todo tipo de maquinaria.',
+      'Retenes para aplicaciones industriales y maquinaria. Consulta medidas, referencias y disponibilidad.',
     badge: null,
-    cta: 'Ver más',
+    cta: 'Consultar disponibilidad',
   },
   {
     tag: 'Repuestos',
     name: 'Repuestos Agrícolas',
     description:
-      'Amplia variedad de repuestos y accesorios para maquinaria agrícola. Tractores, cosechadoras, implementos y más.',
+      'Repuestos y accesorios para maquinaria agrícola. Consúltanos por tu modelo y referencia.',
     badge: null,
-    cta: 'Ver más',
+    cta: 'Consultar disponibilidad',
   },
   {
     tag: 'Ferretería Industrial',
     name: 'Herramientas y Ferretería',
     description:
-      'Todo tipo de herramientas: eléctricas, neumáticas, manuales, llaves, brocas y mucho más. También contamos con tornillería, fijaciones y elementos de ferretería para taller e industria.',
+      'Herramientas y suministros de ferretería para taller e industria. Consulta por productos específicos.',
     badge: null,
-    cta: 'Ver catálogo completo',
+    cta: 'Consultar disponibilidad',
     wide: true,
   },
 ]
 
 export const companyClaims: readonly CompanyClaim[] = [
   {
-    label: 'Distribuidor Oficial',
-    value: 'Koyo (JTEKT)',
-    detail: 'rodamientos en Chile',
-    requiresConfirmation: true,
+    label: 'Rodamientos',
+    value: 'Koyo / JTEKT',
+    detail: 'Consulta por medidas y referencias',
+    requiresConfirmation: false,
   },
   {
-    label: '+40 años',
-    value: 'Desde 1983',
-    detail: 'al servicio del campo y la industria',
-    requiresConfirmation: true,
-  },
-  {
-    label: 'Importación Directa',
+    label: 'Retenes',
     value: 'Corteco',
-    detail: 'retenes — calidad premium',
-    requiresConfirmation: true,
+    detail: 'Consulta por aplicaciones y medidas',
+    requiresConfirmation: false,
   },
   {
-    label: 'Mayor y Menor',
-    value: 'Precios especiales',
-    detail: 'para distribuidores',
-    requiresConfirmation: true,
+    label: 'Repuestos',
+    value: 'Uso agrícola',
+    detail: 'Consulta por maquinaria y modelo',
+    requiresConfirmation: false,
+  },
+  {
+    label: 'Ferretería',
+    value: 'Industrial',
+    detail: 'Herramientas y suministros',
+    requiresConfirmation: false,
   },
 ]
 
 export const aboutStats = [
-  { value: '+40', label: 'Años en el mercado', requiresConfirmation: true },
-  {
-    value: '1',
-    label: 'Distribuidor oficial Koyo en Chile',
-    requiresConfirmation: true,
-  },
-  {
-    value: '100%',
-    label: 'Importación directa Corteco',
-    requiresConfirmation: true,
-  },
+  { value: '4', label: 'Líneas principales de productos', requiresConfirmation: false },
+  { value: 'B2B', label: 'Atención para empresas y talleres', requiresConfirmation: false },
+  { value: 'CL', label: 'Ubicados en Chile', requiresConfirmation: false },
 ] as const
 
 export const contactPlaceholders: readonly ContactPlaceholder[] = [
   {
     label: 'Teléfono',
-    value: 'Pendiente de confirmación',
+    value: 'Por confirmar',
     href: null,
     requiresConfirmation: true,
   },
   {
     label: 'Correo',
-    value: 'Pendiente de confirmación',
+    value: 'Por confirmar',
     href: null,
     requiresConfirmation: true,
   },
   {
     label: 'Dirección',
-    value: 'Pendiente de confirmación',
+    value: 'Por confirmar',
     href: null,
     requiresConfirmation: true,
   },

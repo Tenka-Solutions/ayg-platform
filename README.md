@@ -1,104 +1,65 @@
 # Rodamientos Aguas Negras
 
-Corporate website and product showcase for Rodamientos Aguas Negras / Astorga y
-González Limitada, an industrial and agricultural parts distributor in Chile.
+Static corporate website and product-category showcase for Rodamientos Aguas Negras / Astorga y González Limitada, Chile.
 
-The current site is a static brochure and quotation-oriented showcase. It does
-not include live inventory, e-commerce, authentication, APIs, or an enabled
-contact form.
+The public website is **not an online store**. It has no live inventory, authenticated accounts, customer cart, checkout, payment gateway, shipping rates, or order-creation API.
 
-## Technology
+## Stack
 
-- Next.js 16 App Router
-- React 19
-- TypeScript
-- Tailwind CSS 4
-- Barlow and Barlow Condensed through `next/font`
-- Static HTML export for Cloudflare Pages
+- Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4
+- Static HTML export to `out/` for Cloudflare Pages or static assets hosting
+- Barlow and Barlow Condensed fonts via `next/font`
 
-## Local development
+## Develop and verify
 
-Install dependencies and start the development server:
+Requires a compatible Node.js version (Node 24 recommended).
 
-```bash
-npm install
+```sh
+npm ci
+npm run lint
+npm run test
+npm run build
 npm run dev
 ```
 
-Open `http://localhost:3000`.
+Open `http://localhost:3000`. For Cloudflare Pages, set the build command to `npm run build` and output directory to `out`. For a Worker assets deployment, review `wrangler.jsonc` and the desired hosting configuration. **Do not migrate DNS or publish until the active production domain/site ownership is verified.**
 
-## Production build
+## Contact
 
-```bash
-npm run lint
-npm run build
+Contact uses the company's existing Instagram profile until RAN approves a public contact email, phone, address, and actual form destination. No nonfunctional contact form is exposed.
+
+## Internal cart prototype — NEVER publicly exposed
+
+The code is present but gated by **both** development mode and an explicit flag. It does not render in production, even if the flag is set:
+
+```sh
+NEXT_PUBLIC_CART_PREVIEW=true npm run dev
 ```
 
-`next.config.ts` uses `output: 'export'`. A successful production build creates
-the deployable site in `out/`, including `out/index.html`. The exported site
-does not require a Next.js or Node.js server at runtime.
+On Windows PowerShell:
 
-## Cloudflare Pages
+```powershell
+$env:NEXT_PUBLIC_CART_PREVIEW="true"; npm run dev
+```
 
-Use these build settings:
+The preview includes sample products with **fake prices and fake SKUs**, quantity controls, CLP subtotals, delete/clear, and best-effort localStorage persistence. It does **not** create orders, charge customers, calculate tax or shipping, or validate real inventory.
 
-- Root directory: repository root
-- Build command: `npm run build`
-- Build output directory: `out`
+See [docs/commerce-readiness.md](docs/commerce-readiness.md) for the deferred commerce launch checklist.
 
-No Wrangler configuration, OpenNext adapter, or Pages Function is required for
-the current static site.
-
-## Project structure
+## Project layout
 
 ```text
-app/                  App Router entry points, metadata, and global styles
-components/layout/    Navigation and footer
-components/sections/  Homepage sections
-lib/site-content.ts   Shared navigation, products, claims, links, and placeholders
-public/images/        Brand and page image assets
+app/                    Route and global layout
+components/layout/      Nav and footer
+components/sections/    Public landing sections
+components/commerce/    Local-only internal cart preview
+lib/site-content.ts     Public copy and product categories
+lib/cart/               Typed cart state, reducer, validation, totals
+lib/commerce/           Preview flag and mock products
+tests/                  Cart unit tests
+public/images/          Static imagery
 ```
 
-## Editing content
+## Before declaring the public site ready
 
-Shared business content is centralized in `lib/site-content.ts`. Update that
-file before changing repeated text inside components. Layout and presentation
-remain in the matching component under `components/`.
-
-The in-use white logo is `public/images/logo_white.png`. Other logo files are
-retained until the client confirms which variants are approved.
-
-## Details requiring confirmation
-
-Before final publication, the client must confirm:
-
-- Public phone number
-- Sales email
-- Street address
-- Contact-form destination
-- Production domain
-- Legal display name
-- Start year and years-in-business wording
-- Koyo/JTEKT distributor relationship and exclusivity wording
-- Corteco importer relationship
-- Stock, brand, and nationwide-service claims
-- Rights and approval for all photography and logo variants
-
-The contact form remains visibly disabled until a real destination and handling
-requirements are approved.
-
-## Known limitations
-
-- Product cards lead to the contact section; product detail routes do not exist.
-- Product and company imagery uses branded fallbacks where approved photography
-  is unavailable.
-- No sitemap or canonical URL is emitted because the production domain has not
-  been confirmed.
-- There is no live catalog, product search, inventory, checkout, or admin area.
-
-## Future catalog direction
-
-The existing static architecture can later add category and product routes
-generated at build time. Server-backed deployment should only be introduced
-when requirements such as live inventory, authenticated administration,
-customer-specific pricing, or e-commerce make it necessary.
+Confirm contact details, domain, correct brand and business claims, and photographic rights. Review the live Cloudflare deploy/DNS, run lint/tests/build, then perform desktop/mobile browser acceptance. Those checks are not replaced by the presence of the code in this repository.
