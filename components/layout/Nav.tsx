@@ -26,10 +26,11 @@ export default function Nav() {
       >
         <Link href="/" aria-label="Rodamientos Aguas Negras, inicio" className="flex min-w-0 items-center">
           <Image
-            src="/images/logo_white.png"
+            src="/images/logo-white.webp"
             alt=""
-            width={1567}
-            height={404}
+            width={720}
+            height={186}
+            loading="eager"
             className="h-9 w-auto max-w-[190px] object-contain sm:h-12 sm:max-w-[260px]"
           />
         </Link>

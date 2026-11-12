@@ -31,7 +31,22 @@ $env:NEXT_PUBLIC_CART_PREVIEW="true"; npm run dev
 The internal demo renders below the contact section, supports add/remove/update,
 totals in CLP, and best-effort browser localStorage persistence. All products,
 SKUs and prices in the demo are fake. Nothing is transmitted to a server.
-The demo is compiled out of the public production UI by the environment guard.
+The import is guarded inline in `app/page.tsx` so the production bundler discards
+the preview module and fake catalog, rather than only hiding their UI. The
+preview component also requires a localhost/loopback browser hostname; the dev
+server binds to `127.0.0.1` by default.
+
+Every build runs `scripts/verify-export.mjs`, which checks the emitted HTML,
+RSC/text payloads and JavaScript for private demo markers and purchase routes.
+The production-lock acceptance build must use `NODE_ENV=production` and
+`NEXT_PUBLIC_CART_PREVIEW=true`; the public browser tests run against that
+export. Tests also cover the development/test/production flag matrix.
+
+Persisted data is untrusted: invalid JSON and schema versions reset to an empty
+cart; invalid products and quantities are discarded; duplicate SKUs merge; at
+most 50 lines and 99 units per line survive. Negative, fractional, non-finite or
+unsafe-integer quantity actions are ignored. Explicit quantity zero removes a
+line. Denied/full storage leaves the current tab functional in memory.
 
 ## Before production publication
 
@@ -40,6 +55,8 @@ The demo is compiled out of the public production UI by the environment guard.
 3. Approve brand assets and photography rights.
 4. Configure Cloudflare deployment and test domain/DNS/TLS separately.
 5. Run `npm run lint`, `npm run test`, `npm run build`; inspect the generated `out/`.
+   Also run `npm run typecheck`, `npm run test:e2e`, `npm audit` and
+   `npm audit --omit=dev`. See `sprint-audit.md` for the residual tooling advisory.
 6. Confirm the final live site via browser smoke tests (desktop and mobile).
 
 ## Before online sales activation

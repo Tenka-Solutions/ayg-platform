@@ -7,6 +7,7 @@ import {
   cartReducer,
   emptyCart,
   getCartTotals,
+  formatClp,
   parseSavedCart,
   sanitizeCart,
 } from '../lib/cart/model.ts'
@@ -68,4 +69,36 @@ test('descarta JSON inválido, esquemas anteriores y cantidades manipuladas', ()
   assert.equal(recovered.lines.length, 1)
   assert.equal(recovered.lines[0].quantity, 5)
   assert.deepEqual(sanitizeCart(null), emptyCart())
+})
+
+test('cantidades inválidas no eliminan ni alteran una línea existente', () => {
+  const cart = cartReducer(emptyCart(), { type: 'add', product: bearing, quantity: 2 })
+  for (const quantity of [NaN, Infinity, -Infinity, -1, 0.5, 1.5, '2', null, Number.MAX_SAFE_INTEGER + 1]) {
+    assert.deepEqual(cartReducer(cart, { type: 'set-quantity', sku: bearing.sku, quantity }), cart)
+    assert.deepEqual(cartReducer(cart, { type: 'add', product: seal, quantity }), cart)
+  }
+})
+
+test('persistencia: round trip, duplicados, límites y JSON sin estructura válida', () => {
+  const cart = cartReducer(emptyCart(), { type: 'add', product: bearing, quantity: 3 })
+  assert.deepEqual(parseSavedCart(JSON.stringify(cart)), cart)
+  for (const serialized of [null, '', 'null', '[]', 'true', '{}', '{"version":1,"lines":{}}']) {
+    assert.deepEqual(parseSavedCart(serialized), emptyCart())
+  }
+  const recovered = sanitizeCart({ version: 1, lines: [
+    { product: bearing, quantity: 80 }, { product: bearing, quantity: 80 },
+    { product: seal, quantity: 1.5 }, null,
+  ] })
+  assert.deepEqual(recovered.lines, [{ product: bearing, quantity: MAX_ITEM_QUANTITY }])
+})
+
+test('subtotal máximo es entero seguro y CLP se presenta sin decimales', () => {
+  let cart = emptyCart()
+  for (let i = 0; i < MAX_CART_LINES; i++) {
+    cart = cartReducer(cart, { type: 'add', product: { ...bearing, sku: `MAX-${i}`, unitPriceClp: 1_000_000_000 }, quantity: MAX_ITEM_QUANTITY })
+  }
+  assert.equal(getCartTotals(cart).subtotalClp, 4_950_000_000_000)
+  assert.ok(Number.isSafeInteger(getCartTotals(cart).subtotalClp))
+  assert.equal(formatClp(12990).replace(/\s/g, ''), '$12.990')
+  assert.equal(formatClp(0).replace(/\s/g, ''), '$0')
 })

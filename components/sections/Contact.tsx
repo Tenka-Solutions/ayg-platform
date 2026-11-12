@@ -40,7 +40,7 @@ export default function Contact() {
               href={instagram.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 inline-flex min-h-11 items-center justify-center self-start rounded bg-blue px-6 py-3 text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-blue-deeper"
+              className="mt-6 inline-flex min-h-11 max-w-full items-center justify-center self-start rounded bg-blue px-6 py-3 text-center text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-blue-deeper"
             >
               Contactar por Instagram <span aria-hidden="true" className="ml-2">↗</span>
             </a>

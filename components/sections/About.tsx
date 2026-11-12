@@ -31,7 +31,7 @@ export default function About() {
         <div className="relative flex min-h-[300px] items-center justify-center overflow-hidden rounded-lg bg-blue px-8 py-14 text-white lg:min-h-[420px]">
           <div aria-hidden="true" className="absolute -right-16 -top-20 h-72 w-72 rounded-full border-[44px] border-white/5" />
           <div className="relative z-10 flex max-w-md flex-col items-center gap-6 text-center">
-            <Image src="/images/logo_white.png" alt="" width={1567} height={404} className="h-auto w-full max-w-[360px]" />
+            <Image src="/images/logo-white.webp" alt="" width={720} height={186} className="h-auto w-full max-w-[360px]" />
             <p className="text-base leading-relaxed text-white/80">{company.summary}</p>
           </div>
         </div>

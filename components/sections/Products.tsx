@@ -20,7 +20,7 @@ export default function Products() {
           <Link
             key={product.name}
             href="/#contacto"
-            className={`group overflow-hidden rounded-lg border border-border bg-white transition-all hover:-translate-y-1 hover:shadow-lg ${product.wide ? 'md:col-span-2' : ''}`}
+            className="group overflow-hidden rounded-lg border border-border bg-white transition-all hover:-translate-y-1 hover:shadow-lg"
           >
             <div aria-hidden="true" className="relative flex h-48 items-center justify-center overflow-hidden bg-blue/5">
               <div className="absolute -right-10 -top-12 h-40 w-40 rounded-full border-[28px] border-blue/5" />

@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@theme {
+@theme inline {
   /* colors */
   --color-blue: #03005b;
   --color-blue-dark: #1749b0;
@@ -9,12 +9,12 @@
   --color-bg: #F8FAFC;
   --color-text: #0f1e3c;
   --color-text-mid: #3a4a6b;
-  --color-text-light: #6b7a99;
+  --color-text-light: #536380;
   --color-border: #dde4f0;
 
   /* fonts */
-  --font-display: 'Barlow Condensed', sans-serif;
-  --font-body: 'Barlow', sans-serif;
+  --font-display: var(--font-barlow-condensed), sans-serif;
+  --font-body: var(--font-barlow), sans-serif;
 }
 
 /* base styles */
@@ -27,20 +27,20 @@ html {
 }
 
 body {
-  font-family: var(--font-body);
+  font-family: var(--font-barlow), sans-serif;
   background-color: var(--color-bg);
   color: var(--color-text);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 
-:where(a, button, input, textarea, select, summary):focus-visible {
+:focus-visible {
   outline: 3px solid var(--color-yellow);
   outline-offset: 3px;
   box-shadow: 0 0 0 5px var(--color-blue);
 }
 
-:where(section[id]) {
+:where(main[id], section[id]) {
   scroll-margin-top: 5rem;
 }
 

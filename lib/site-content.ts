@@ -10,7 +10,6 @@ export type ProductCategory = {
   description: string
   badge: string | null
   cta: string
-  wide?: boolean
 }
 
 export type CompanyClaim = {
@@ -82,7 +81,6 @@ export const productCategories: readonly ProductCategory[] = [
       'Herramientas y suministros de ferretería para taller e industria. Consulta por productos específicos.',
     badge: null,
     cta: 'Consultar disponibilidad',
-    wide: true,
   },
 ]
 

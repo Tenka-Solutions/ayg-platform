@@ -52,17 +52,17 @@ function normalizeProduct(value: unknown): CartProduct | null {
   return { sku: sku.trim(), name: name.trim(), unitPriceClp }
 }
 
-function normalizeQuantity(quantity: number): number {
-  if (typeof quantity !== 'number' || !Number.isFinite(quantity)) return 0
-  return Math.min(MAX_ITEM_QUANTITY, Math.max(0, Math.floor(quantity)))
+function normalizeQuantity(quantity: number): number | null {
+  if (!Number.isSafeInteger(quantity) || quantity < 0) return null
+  return Math.min(MAX_ITEM_QUANTITY, quantity)
 }
 
 export function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case 'add': {
       const product = normalizeProduct(action.product)
-      const amount = normalizeQuantity(action.quantity ?? 1)
-      if (!product || amount === 0) return state
+      const amount = normalizeQuantity(action.quantity === undefined ? 1 : action.quantity)
+      if (!product || amount === null || amount === 0) return state
 
       const index = state.lines.findIndex((line) => line.product.sku === product.sku)
       if (index < 0) {
@@ -78,6 +78,7 @@ export function cartReducer(state: CartState, action: CartAction): CartState {
     }
     case 'set-quantity': {
       const quantity = normalizeQuantity(action.quantity)
+      if (quantity === null) return state
       if (quantity === 0) {
         return { ...state, lines: state.lines.filter((line) => line.product.sku !== action.sku) }
       }

@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useReducer, useState } from 'react'
+import { useEffect, useReducer, useRef, useSyncExternalStore } from 'react'
 import {
   CART_STORAGE_KEY,
+  MAX_ITEM_QUANTITY,
   cartReducer,
   emptyCart,
   formatClp,
@@ -10,32 +11,40 @@ import {
   parseSavedCart,
 } from '@/lib/cart/model'
 import { previewProducts } from '@/lib/commerce/preview-products'
+import { cartPreviewEnabled } from '@/lib/commerce/features'
+
+const subscribe = () => () => {}
+const serverSnapshot = () => false
+const localSnapshot = () =>
+  cartPreviewEnabled && ['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname)
 
 /**
  * Internal local-dev preview only. Never mount in production.
  * Fake prices and SKUs are not a real catalog or sales offer.
  */
 export default function CartPreview() {
-  const [cart, dispatch] = useReducer(cartReducer, undefined, emptyCart)
-  const [hydrated, setHydrated] = useState(false)
+  const isLocalPreview = useSyncExternalStore(subscribe, localSnapshot, serverSnapshot)
+  return isLocalPreview ? <LocalCart /> : null
+}
 
-  useEffect(() => {
+// Mount only in the local browser: the reducer reads storage once, before any write.
+function LocalCart() {
+  const [cart, dispatch] = useReducer(cartReducer, undefined, () => {
     try {
-      dispatch({ type: 'hydrate', state: parseSavedCart(window.localStorage.getItem(CART_STORAGE_KEY)) })
+      return parseSavedCart(window.localStorage.getItem(CART_STORAGE_KEY))
     } catch {
-      // Browsers can deny localStorage; keep the in-memory cart functional.
+      return emptyCart()
     }
-    setHydrated(true)
-  }, [])
+  })
+  const headingRef = useRef<HTMLHeadingElement>(null)
 
   useEffect(() => {
-    if (!hydrated) return
     try {
       window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart))
     } catch {
       // Storage might be disabled or full. The cart still functions in memory.
     }
-  }, [cart, hydrated])
+  }, [cart])
 
   const totals = getCartTotals(cart)
 
@@ -63,7 +72,9 @@ export default function CartPreview() {
                     <p className="text-sm">{formatClp(product.unitPriceClp)}</p>
                   </div>
                   <button type="button" onClick={() => dispatch({ type: 'add', product })}
-                    className="min-h-11 rounded bg-blue-deeper px-4 py-2 font-semibold text-white hover:bg-blue">
+                    aria-label={`Agregar ${product.name}`}
+                    disabled={cart.lines.some((line) => line.product.sku === product.sku && line.quantity >= MAX_ITEM_QUANTITY)}
+                    className="min-h-11 rounded bg-blue-deeper px-4 py-2 font-semibold text-white hover:bg-blue disabled:opacity-40">
                     Agregar
                   </button>
                 </article>
@@ -71,8 +82,11 @@ export default function CartPreview() {
             </div>
           </div>
 
-          <div className="rounded border border-amber-200 bg-white p-5">
-            <h3 className="mb-4 text-lg font-bold">Carrito ({totals.quantity})</h3>
+          <div className="min-w-0 rounded border border-amber-200 bg-white p-5">
+            <h3 ref={headingRef} tabIndex={-1} className="mb-4 text-lg font-bold">Carrito ({totals.quantity})</h3>
+            <p role="status" aria-atomic="true" className="sr-only">
+              {totals.quantity} unidades. Subtotal de prueba: {formatClp(totals.subtotalClp)}.
+            </p>
             {cart.lines.length === 0 ? (
               <p className="text-sm text-slate-600">El carrito está vacío.</p>
             ) : (
@@ -81,16 +95,19 @@ export default function CartPreview() {
                   <li key={product.sku} className="border-b border-slate-200 pb-4">
                     <div className="flex items-start justify-between gap-3">
                       <span className="font-semibold">{product.name}</span>
-                      <button type="button" onClick={() => dispatch({ type: 'remove', sku: product.sku })}
-                        aria-label={`Quitar ${product.name}`} className="text-sm font-semibold text-red-700 underline">Quitar</button>
+                      <button type="button" onClick={() => {
+                        dispatch({ type: 'remove', sku: product.sku })
+                        headingRef.current?.focus()
+                      }}
+                        aria-label={`Quitar ${product.name}`} className="min-h-11 px-1 text-sm font-semibold text-red-700 underline">Quitar</button>
                     </div>
-                    <div className="mt-2 flex items-center justify-between gap-4">
+                    <div className="mt-2 flex flex-wrap items-center justify-between gap-4">
                       <div className="flex items-center gap-2">
                         <button type="button" onClick={() => dispatch({ type: 'set-quantity', sku: product.sku, quantity: quantity - 1 })}
-                          aria-label={`Reducir cantidad de ${product.name}`} className="min-h-11 min-w-11 rounded border border-slate-400">−</button>
+                          disabled={quantity <= 1} aria-label={`Reducir cantidad de ${product.name}`} className="min-h-11 min-w-11 rounded border border-slate-400 disabled:opacity-40">−</button>
                         <span aria-label={`Cantidad: ${quantity}`} className="min-w-8 text-center">{quantity}</span>
                         <button type="button" onClick={() => dispatch({ type: 'set-quantity', sku: product.sku, quantity: quantity + 1 })}
-                          disabled={quantity >= 99} aria-label={`Aumentar cantidad de ${product.name}`}
+                          disabled={quantity >= MAX_ITEM_QUANTITY} aria-label={`Aumentar cantidad de ${product.name}`}
                           className="min-h-11 min-w-11 rounded border border-slate-400 disabled:opacity-40">+</button>
                       </div>
                       <span className="text-sm font-bold">{formatClp(product.unitPriceClp * quantity)}</span>
@@ -99,11 +116,14 @@ export default function CartPreview() {
                 ))}
               </ul>
             )}
-            <div className="mt-5 flex justify-between border-t border-slate-200 pt-4 font-bold">
+            <div className="mt-5 flex flex-wrap justify-between gap-2 border-t border-slate-200 pt-4 font-bold">
               <span>Subtotal de prueba</span><span>{formatClp(totals.subtotalClp)}</span>
             </div>
             <p className="mt-2 text-xs text-slate-500">Sin impuestos, despacho ni descuentos. No válido para venta.</p>
-            <button type="button" onClick={() => dispatch({ type: 'clear' })}
+            <button type="button" onClick={() => {
+              dispatch({ type: 'clear' })
+              headingRef.current?.focus()
+            }}
               disabled={cart.lines.length === 0}
               className="mt-5 min-h-11 w-full rounded border border-slate-400 px-4 py-2 font-semibold disabled:opacity-40">
               Vaciar carrito

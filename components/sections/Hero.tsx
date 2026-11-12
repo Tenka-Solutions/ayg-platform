@@ -12,9 +12,9 @@ export default function Hero() {
           Rodamientos y repuestos industriales
         </div>
         <h1 className="mb-5 font-display text-[clamp(40px,5vw,66px)] font-extrabold uppercase leading-none tracking-tight">
-          Todos los <br />
+          Rodamientos y <br />
           repuestos <br />
-          que <em className="not-italic text-yellow">necesitas,</em> <br />
+          para <em className="not-italic text-yellow">tus equipos,</em> <br />
           aquí.
         </h1>
         <p className="mb-9 max-w-[440px] text-[17px] leading-relaxed text-white/80">
