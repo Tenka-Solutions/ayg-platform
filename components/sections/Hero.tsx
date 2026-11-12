@@ -9,32 +9,26 @@ export default function Hero() {
 
       <div className="relative z-10">
         <div className="mb-6 inline-flex items-center gap-2 rounded-sm border border-yellow/40 bg-yellow/15 px-3.5 py-1.5 text-[13px] font-semibold uppercase tracking-widest text-yellow">
-          <span aria-hidden="true">★</span> +40 años en el mercado
+          Rodamientos y repuestos industriales
         </div>
-
         <h1 className="mb-5 font-display text-[clamp(40px,5vw,66px)] font-extrabold uppercase leading-none tracking-tight">
-          Todos los <br />
+          Rodamientos y <br />
           repuestos <br />
-          que <em className="not-italic text-yellow">necesitas,</em> <br />
+          para <em className="not-italic text-yellow">tus equipos,</em> <br />
           aquí.
         </h1>
-
         <p className="mb-9 max-w-[440px] text-[17px] leading-relaxed text-white/80">
-          Distribuidores oficiales de <strong className="text-white">Koyo</strong> en Chile.
-          Importadores directos de <strong className="text-white">Corteco</strong>.
-          Repuestos agrícolas, ferretería industrial y mucho más.
+          Rodamientos, retenes, repuestos agrícolas y ferretería industrial para el campo y la industria.
         </p>
-
         <div className="flex flex-wrap gap-3.5">
           <Link href="/#productos" className="rounded bg-yellow px-6 py-3.5 text-[15px] font-bold uppercase tracking-widest text-blue-deeper transition-all hover:-translate-y-px hover:bg-yellow/90 sm:px-7 sm:text-[16px]">
-            Ver catálogo
+            Ver productos
           </Link>
           <Link href="/#contacto" className="rounded border border-white/50 px-6 py-3.5 text-[15px] font-bold uppercase tracking-widest text-white transition-all hover:border-white hover:bg-white/8 sm:px-7 sm:text-[16px]">
-            Cotizar por mayor
+            Consultar disponibilidad
           </Link>
         </div>
       </div>
-
       <div className="relative z-10 flex min-w-0 items-center justify-center">
         <Image
           src="/images/hero1.jpg"

@@ -12,10 +12,10 @@ export default function Footer() {
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-5 py-12 sm:grid-cols-2 sm:px-8 lg:grid-cols-3 lg:gap-12 lg:px-12 lg:py-16">
         <div className="flex flex-col gap-4">
           <Image
-            src="/images/logo_white.png"
+            src="/images/logo-white.webp"
             alt=""
-            width={1567}
-            height={404}
+            width={720}
+            height={186}
             className="h-12 w-auto max-w-[280px] object-contain object-left"
           />
           <p className="max-w-sm text-sm leading-relaxed text-white/75">

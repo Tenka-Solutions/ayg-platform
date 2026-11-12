@@ -7,8 +7,10 @@ export default function TrustBar() {
         <div
           key={claim.label}
           className={`flex flex-col gap-1 border-white/15 px-5 py-6 sm:px-8 ${
-            index > 0 ? 'border-t sm:border-t-0 sm:border-l' : ''
-          } ${index === 2 ? 'sm:border-l-0 sm:border-t lg:border-l lg:border-t-0' : ''}`}
+            index > 0 ? 'border-t' : ''
+          } ${index >= 2 ? 'sm:border-t lg:border-t-0' : 'sm:border-t-0'} ${
+            index % 2 === 1 ? 'sm:border-l' : ''
+          } ${index > 0 ? 'lg:border-l' : ''}`}
         >
           <span className="text-[11px] font-semibold uppercase tracking-widest text-yellow">
             {claim.label}

@@ -1,104 +1,121 @@
 # Rodamientos Aguas Negras
 
-Corporate website and product showcase for Rodamientos Aguas Negras / Astorga y
-González Limitada, an industrial and agricultural parts distributor in Chile.
+Static corporate website and product-category showcase for Rodamientos Aguas Negras / Astorga y González Limitada, Chile.
 
-The current site is a static brochure and quotation-oriented showcase. It does
-not include live inventory, e-commerce, authentication, APIs, or an enabled
-contact form.
+The public website is **not an online store**. It has no live inventory, authenticated accounts, customer cart, checkout, payment gateway, shipping rates, or order-creation API.
 
-## Technology
+## Stack
 
-- Next.js 16 App Router
-- React 19
-- TypeScript
-- Tailwind CSS 4
-- Barlow and Barlow Condensed through `next/font`
-- Static HTML export for Cloudflare Pages
+- Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4
+- Static HTML export to `out/` for Cloudflare Pages or static assets hosting
+- Barlow and Barlow Condensed fonts via `next/font`
 
-## Local development
+## Develop and verify
 
-Install dependencies and start the development server:
+Requires Node.js 24 or newer. The verified toolchain is Node 24, Next.js 16.4.6,
+React 19.2.4, TypeScript 5 and Tailwind CSS 4.
 
-```bash
-npm install
+```sh
+npm ci
+npm run lint
+npm run test
+npm run typecheck
+npm run build
 npm run dev
 ```
 
-Open `http://localhost:3000`.
+Open `http://127.0.0.1:3000`. Development binds to loopback. For Cloudflare Pages,
+set the build command to `npm run build` and output directory to `out`. For a
+Worker assets deployment, review `wrangler.jsonc` and the desired hosting
+configuration. Only static assets are needed; no Next.js server or OpenNext
+adapter is used. **Do not migrate DNS or publish until the active production
+domain/site ownership is verified.**
 
-## Production build
+Every build runs `verify:export` automatically to check public metadata,
+fragments, resources and absence of private commerce content in HTML, RSC and JS.
+Use `npm start` after building for a loopback-only preview of `out/` (including
+real 404 responses); `next start` is incompatible with static export.
 
-```bash
-npm run lint
-npm run build
+## Contact
+
+Contact uses the company's existing Instagram profile until RAN approves a public contact email, phone, address, and actual form destination. No nonfunctional contact form is exposed.
+
+## Internal cart prototype — NEVER publicly exposed
+
+The code is present but gated by **both** development mode and an explicit flag. It does not render in production, even if the flag is set:
+
+```sh
+NEXT_PUBLIC_CART_PREVIEW=true npm run dev
 ```
 
-`next.config.ts` uses `output: 'export'`. A successful production build creates
-the deployable site in `out/`, including `out/index.html`. The exported site
-does not require a Next.js or Node.js server at runtime.
+On Windows PowerShell:
 
-## Cloudflare Pages
+```powershell
+$env:NEXT_PUBLIC_CART_PREVIEW="true"; npm run dev
+```
 
-Use these build settings:
+The preview additionally checks the browser hostname (localhost / loopback).
+It includes sample products with **fake prices and fake SKUs**, integer quantity
+controls (1–99), CLP subtotals, delete/clear, and best-effort localStorage
+persistence. It does **not** create orders, charge customers, calculate tax or
+shipping, or validate real inventory.
 
-- Root directory: repository root
-- Build command: `npm run build`
-- Build output directory: `out`
+To reproduce the production lock and browser checks in PowerShell:
 
-No Wrangler configuration, OpenNext adapter, or Pages Function is required for
-the current static site.
+```powershell
+$env:NEXT_PUBLIC_CART_PREVIEW="true"
+$env:NODE_ENV="production"
+npm run build
+Remove-Item Env:NODE_ENV
+npm run test:e2e
+```
 
-## Project structure
+Playwright starts isolated local development and static servers and stops them
+after testing. Install its Chromium once with `npx playwright install chromium`,
+or use an existing Chrome with `$env:PLAYWRIGHT_CHANNEL="chrome"` before running
+`npm run test:e2e`. Screenshots and failure traces go to ignored `test-results/`.
+
+## Pull request CI
+
+[GitHub Actions CI](.github/workflows/ci.yml) validates every pull request into
+`main` on Ubuntu 24.04 with Node.js 24. It uses `npm ci`, caches npm downloads by
+the lockfile, then runs lint, unit tests, typecheck and a production build with
+`NEXT_PUBLIC_CART_PREVIEW=true`. The existing `postbuild` export check rejects
+cart UI, fake products and purchase routes in `out/`.
+
+CI installs only Playwright's Chromium headless shell and its required system
+libraries, then runs both public-export and local-cart E2E projects. HTML reports,
+screenshots, local metrics and failure traces are retained as GitHub artifacts
+for seven days. `NODE_ENV=production` applies only to the build step, allowing the
+local-cart project's development server to work normally.
+
+The workflow has read-only repository permissions, does not persist checkout
+credentials and pins actions to commit SHAs. It has no deployment steps or
+external service dependencies. To make the CI check mandatory for merges,
+maintainers can select it in the repository's branch protection/ruleset;
+this workflow does not change repository settings.
+
+See [docs/commerce-readiness.md](docs/commerce-readiness.md) for the deferred commerce launch checklist.
+
+## Project layout
 
 ```text
-app/                  App Router entry points, metadata, and global styles
-components/layout/    Navigation and footer
-components/sections/  Homepage sections
-lib/site-content.ts   Shared navigation, products, claims, links, and placeholders
-public/images/        Brand and page image assets
+app/                    Route and global layout
+components/layout/      Nav and footer
+components/sections/    Public landing sections
+components/commerce/    Local-only internal cart preview
+lib/site-content.ts     Public copy and product categories
+lib/cart/               Typed cart state, reducer, validation, totals
+lib/commerce/           Preview flag and mock products
+tests/                  Cart/flag unit tests and browser acceptance
+scripts/                Static preview and export verification
+public/images/          Optimized imagery currently used by the site
+assets/source-images/   Preserved originals and unused drafts (not exported)
 ```
 
-## Editing content
+## Before declaring the public site ready
 
-Shared business content is centralized in `lib/site-content.ts`. Update that
-file before changing repeated text inside components. Layout and presentation
-remain in the matching component under `components/`.
+Confirm contact details, domain, correct brand and business claims, and photographic rights. Review the live Cloudflare deploy/DNS, run lint/tests/build, then perform desktop/mobile browser acceptance. Those checks are not replaced by the presence of the code in this repository.
 
-The in-use white logo is `public/images/logo_white.png`. Other logo files are
-retained until the client confirms which variants are approved.
-
-## Details requiring confirmation
-
-Before final publication, the client must confirm:
-
-- Public phone number
-- Sales email
-- Street address
-- Contact-form destination
-- Production domain
-- Legal display name
-- Start year and years-in-business wording
-- Koyo/JTEKT distributor relationship and exclusivity wording
-- Corteco importer relationship
-- Stock, brand, and nationwide-service claims
-- Rights and approval for all photography and logo variants
-
-The contact form remains visibly disabled until a real destination and handling
-requirements are approved.
-
-## Known limitations
-
-- Product cards lead to the contact section; product detail routes do not exist.
-- Product and company imagery uses branded fallbacks where approved photography
-  is unavailable.
-- No sitemap or canonical URL is emitted because the production domain has not
-  been confirmed.
-- There is no live catalog, product search, inventory, checkout, or admin area.
-
-## Future catalog direction
-
-The existing static architecture can later add category and product routes
-generated at build time. Server-backed deployment should only be introduced
-when requirements such as live inventory, authenticated administration,
-customer-specific pricing, or e-commerce make it necessary.
+See [the sprint audit](docs/sprint-audit.md) for security applicability, validation
+results, changed files and remaining client decisions.

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import type { SiteLink } from '@/lib/site-content'
 
@@ -10,10 +10,43 @@ type MobileMenuProps = {
 
 export default function MobileMenu({ links }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false)
+        buttonRef.current?.focus()
+      }
+    }
+    const onPointerDown = (event: PointerEvent) => {
+      if (event.target instanceof Node && !menuRef.current?.contains(event.target)) {
+        setIsOpen(false)
+      }
+    }
+    const desktop = window.matchMedia('(min-width: 1024px)')
+    const onResize = () => {
+      if (desktop.matches) setIsOpen(false)
+    }
+    document.addEventListener('keydown', onKeyDown)
+    document.addEventListener('pointerdown', onPointerDown)
+    desktop.addEventListener('change', onResize)
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      document.removeEventListener('pointerdown', onPointerDown)
+      desktop.removeEventListener('change', onResize)
+    }
+  }, [isOpen])
 
   return (
-    <div className="lg:hidden">
+    <div ref={menuRef} className="lg:hidden" onBlur={(event) => {
+      if (!event.currentTarget.contains(event.relatedTarget)) setIsOpen(false)
+    }}>
       <button
+        ref={buttonRef}
         type="button"
         aria-expanded={isOpen}
         aria-controls="mobile-navigation"
@@ -39,10 +72,10 @@ export default function MobileMenu({ links }: MobileMenuProps) {
         </svg>
       </button>
 
-      {isOpen && (
         <div
           id="mobile-navigation"
-          className="absolute inset-x-0 top-full border-t border-white/10 bg-blue px-5 py-5 shadow-xl"
+          hidden={!isOpen}
+          className="absolute inset-x-0 top-full max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-white/10 bg-blue px-5 py-5 shadow-xl"
         >
           <ul className="flex list-none flex-col gap-1">
             {links.map((link) => (
@@ -67,7 +100,6 @@ export default function MobileMenu({ links }: MobileMenuProps) {
             </li>
           </ul>
         </div>
-      )}
     </div>
   )
 }

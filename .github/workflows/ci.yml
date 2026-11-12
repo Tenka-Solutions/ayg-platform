@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Lint, unit, types, production export and E2E
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      CI: 'true'
+      NEXT_TELEMETRY_DISABLED: '1'
+
+    steps:
+      - name: Checkout pull request
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js 24 and npm cache
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm run test
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # postbuild runs verify:export against HTML, RSC, JS and purchase routes.
+      # Keep NODE_ENV scoped to this step: E2E also starts a development server.
+      - name: Build production and verify commerce stays private
+        run: npm run build
+        env:
+          NODE_ENV: production
+          NEXT_PUBLIC_CART_PREVIEW: 'true'
+
+      - name: Install Chromium headless and its system dependencies
+        run: npx --no-install playwright install --with-deps --only-shell chromium
+
+      - name: Playwright E2E
+        id: e2e
+        run: npm run test:e2e -- --forbid-only --reporter=line,html
+        env:
+          PLAYWRIGHT_HTML_OPEN: never
+
+      - name: Preserve Playwright results
+        if: ${{ !cancelled() && (steps.e2e.outcome == 'success' || steps.e2e.outcome == 'failure') }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: playwright-results
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+          if-no-files-found: warn
