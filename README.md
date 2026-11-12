@@ -75,6 +75,26 @@ after testing. Install its Chromium once with `npx playwright install chromium`,
 or use an existing Chrome with `$env:PLAYWRIGHT_CHANNEL="chrome"` before running
 `npm run test:e2e`. Screenshots and failure traces go to ignored `test-results/`.
 
+## Pull request CI
+
+[GitHub Actions CI](.github/workflows/ci.yml) validates every pull request into
+`main` on Ubuntu 24.04 with Node.js 24. It uses `npm ci`, caches npm downloads by
+the lockfile, then runs lint, unit tests, typecheck and a production build with
+`NEXT_PUBLIC_CART_PREVIEW=true`. The existing `postbuild` export check rejects
+cart UI, fake products and purchase routes in `out/`.
+
+CI installs only Playwright's Chromium headless shell and its required system
+libraries, then runs both public-export and local-cart E2E projects. HTML reports,
+screenshots, local metrics and failure traces are retained as GitHub artifacts
+for seven days. `NODE_ENV=production` applies only to the build step, allowing the
+local-cart project's development server to work normally.
+
+The workflow has read-only repository permissions, does not persist checkout
+credentials and pins actions to commit SHAs. It has no deployment steps or
+external service dependencies. To make the CI check mandatory for merges,
+maintainers can select it in the repository's branch protection/ruleset;
+this workflow does not change repository settings.
+
 See [docs/commerce-readiness.md](docs/commerce-readiness.md) for the deferred commerce launch checklist.
 
 ## Project layout
